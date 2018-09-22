@@ -30,28 +30,35 @@ class XGBoostModel:
     def train(self):
         watchlist = [(self.dtrain, 'train'), (self.dtest, 'test')]
         self.model = xgb.train(self.params, self.dtrain, evals=watchlist, num_boost_round=self.num_round)
-        self.predict()
-
-    def predict(self):
+        self.model.save_model('xgb.model')
         return self.model.predict(self.dtest)
 
     @staticmethod
-    def evaluation(predict, test, label):
-        res = test
-        res['predict'] = predict
-        res['label'] = label
-        res.reset_index(drop=True)
-        result = res.iloc[res.groupby(['user_id']).apply(lambda x: x['predict'].idxmax())]
+    def result_merge(predict, test, label):
+        result = test
+        result['predict'] = predict
+        result['label'] = label
+        result = result.reset_index(drop=True)
+        result['predict'] = result['predict'].astype('float64')
+        return result.iloc[result.groupby(['user_id']).apply(lambda x: x['predict'].idxmax())]
 
+    @staticmethod
+    def evaluation(predict, test, label):
+        result = XGBoostModel.result_merge(predict, test, label)
         score = 0.0
         service_list = result.groupby(['current_service']).count().index.values
-        for id in service_list:
-            tp = result[(result['service_id'] == result['current_service']) & (result['current_service'] == id)].shape[0]
-            fp = result[(result['service_id'] != result['current_service']) & (result['service_id'] == id)].shape[0]
-            fn = result[(result['service_id'] != result['current_service']) & (result['current_service'] == id)].shape[0]
 
-            precision = float(tp)/(tp+fp)
-            recall = float(tp)/(tp+fn)
-            score += 2*precision*recall/(precision+recall)
+        for service in service_list:
+            tp = result[(result['service_id'] == result['current_service']) & (result['current_service'] == service)].shape[0]
+            fp = result[(result['service_id'] != result['current_service']) & (result['service_id'] == service)].shape[0]
+            fn = result[(result['service_id'] != result['current_service']) & (result['current_service'] == service)].shape[0]
+
+            try:
+                precision = float(tp)/(tp+fp)
+                recall = float(tp)/(tp+fn)
+                score += 2*precision*recall/(precision+recall)
+            except ZeroDivisionError:
+                print 'zero error in service:', service
+                continue
 
         return (score/len(service_list))**2

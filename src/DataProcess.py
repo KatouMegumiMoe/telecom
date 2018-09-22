@@ -1,6 +1,5 @@
 import pandas as pd
 from sklearn.model_selection import GroupKFold
-import xgboost as xgb
 
 
 class DataProcess:
@@ -22,15 +21,26 @@ class DataProcess:
 
     @staticmethod
     def get_valid_data(df_bin):
-        user_id = df_bin.groupby(['current_service']).count().index.values
+        user_id = df_bin[['user_id']].values.tolist()
+        group = GroupKFold(n_splits=5)
 
-        for train_idx, test_idx in GroupKFold(n_splits=5)\
-                .split(df_bin.drop(['label'], axis=1), df_bin[['label']], groups=user_id):
+        for train_idx, test_idx in group.split(df_bin.drop(['label'], axis=1), df_bin[['label']], groups=user_id):
             train = df_bin.iloc[train_idx]
             test = df_bin.iloc[test_idx]
             X_train = train.drop(['label'], axis=1)
             y_train = train[['label']]
             X_test = test.drop(['label'], axis=1)
             y_test = test[['label']]
+            break
 
         return X_train, y_train, X_test, y_test
+
+    @staticmethod
+    def get_test_data(train, test):
+        X_train = train.drop(['label'], axis=1)
+        y_train = train[['label']]
+        X_test = test.drop(['label'], axis=1)
+        y_test = test[['label']]
+
+        return X_train, y_train, X_test, y_test
+
