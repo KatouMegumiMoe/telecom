@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import GroupKFold
+from Constant import Const
 
 
 class DataProcess:
@@ -13,8 +14,6 @@ class DataProcess:
     def data_input(self):
         self.df = pd.read_csv(self.train_file_name)
         self.dft = pd.read_csv(self.test_file_name)
-        print 'before processing train data shape:', self.df.shape
-        print 'before processing test data shape:', self.dft.shape
         return self.fill_nan()
 
     def fill_nan(self):
@@ -24,9 +23,46 @@ class DataProcess:
         self.dft = self.dft[~self.dft.isin(['\N'])].fillna(0)
         self.dft = self.dft.reset_index(drop=True)
 
-        print 'after processing train data shape:', self.df.shape
-        print 'after processing test data shape:', self.dft.shape
         return self.df, self.dft
+
+    @staticmethod
+    def transform_to_binary(df, dft, df_binary=pd.DataFrame(), dft_binary=pd.DataFrame()):
+        all_service = df.groupby(['current_service']).count().index.values
+        service_list = list()
+        user_list = list()
+        label_list = list()
+
+        for row in range(df.shape[0]):
+            current_service = int(df.at[row, 'current_service'])
+            user_id = df.at[row, 'user_id']
+
+            for service_id in all_service:
+                service_list.append(service_id)
+                user_list.append(user_id)
+                label_list.append(1) if service_id == current_service else label_list.append(0)
+
+        df_binary['service_id'] = service_list
+        df_binary['user_id'] = user_list
+        df_binary['label'] = label_list
+
+        df_train = pd.merge(df, df_binary, how='left', on='user_id')
+
+        service_list = list()
+        user_list = list()
+
+        for row in range(dft.shape[0]):
+            user_id = str(dft.at[row, 'user_id'])
+
+            for service_id in all_service:
+                service_list.append(service_id)
+                user_list.append(user_id)
+
+        dft_binary['service_id'] = service_list
+        dft_binary['user_id'] = user_list
+
+        df_test = pd.merge(dft, dft_binary, how='left', on='user_id')
+
+        return df_train, df_test
 
     @staticmethod
     def get_split_data(df_bin, dft_bin):
@@ -45,3 +81,13 @@ class DataProcess:
         X_test = dft_bin
 
         return X_train, y_train, X_valid, y_valid, X_test
+
+    @staticmethod
+    def sort_index(dft, df):
+        index = [item for item in range(dft.shape[0])]
+        dft['sort'] = index
+        result = pd.merge(df, dft, how='left', on='user_id')
+        result = result[['user_id', 'predict', 'sort']]
+        result = result.sort_values(['sort'])
+        result = result[['user_id', 'predict']]
+        result.to_csv(Const.SUBMISSION_FILE_NAME, index=False)

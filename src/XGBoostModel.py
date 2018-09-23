@@ -1,5 +1,7 @@
 import xgboost as xgb
 from Constant import Const
+import operator
+import pandas as pd
 
 
 class XGBoostModel:
@@ -7,15 +9,15 @@ class XGBoostModel:
     def __init__(self, X_train, y_train, X_valid, y_valid, X_test, num_round=Const.NUM_ROUND, model=None):
         self.params = {'colsample_bytree': 0.8,
                        'silent': 1,
-                       'eval_metric': 'auc',
-                       'eta': 0.1,
+                       'eval_metric': 'error',
+                       'eta': 0.05,
                        'learning_rate': 0.1,
                        'njob': 8,
                        'min_child_weight': 1,
                        'subsample': 0.8,
                        'seed': 0,
-                       'objective': 'reg:linear',
-                       'max_depth': 4,
+                       'objective': 'binary:logistic',
+                       'max_depth': 5,
                        'gamma': 0.0,
                        'booster': 'gbtree'}
 
@@ -32,38 +34,55 @@ class XGBoostModel:
         self.num_round = num_round
         self.model = model
 
-    def train(self):
+    def train_model(self):
         watchlist = [(self.dtrain, 'train'), (self.dvalid, 'valid')]
         self.model = xgb.train(self.params, self.dtrain, evals=watchlist, num_boost_round=self.num_round)
-        self.model.save_model('xgb.model')
+        self.model.save_model(Const.MODEL_FILE_NAME)
+
+        self.valid_model()
+        result = self.predict_model()
+        return result
+
+    def load_model(self):
+        self.model = xgb.Booster({'nthread':4})
+        self.model.load_model(Const.MODEL_FILE_NAME)
+        self.valid_model()
+
+        importance = self.model.get_fscore()
+        importance = sorted(importance.items(), key=operator.itemgetter(1))
+        print pd.DataFrame(importance, columns=['feature', 'score'])
+
+    def valid_model(self):
         prediction = self.model.predict(self.dvalid)
+        err = XGBoostModel.evaluation(prediction, self.X_valid, self.y_valid)
+        print 'the total f-score:', err
 
-        print 'the total f-score:', XGBoostModel.evaluation(prediction, self.X_valid, self.y_valid)
-
+    def predict_model(self):
         prediction = self.model.predict(self.dtest)
         result = XGBoostModel.test_result_merge(prediction, self.X_test)
         XGBoostModel.save_data(result)
+        return result
 
     @staticmethod
-    def test_result_merge(predict, test):
+    def test_result_merge(predict_result, test):
         result = test
-        result['predict'] = predict
+        result['predict'] = predict_result
         result = result.reset_index(drop=True)
         result['predict'] = result['predict'].astype('float64')
         return result.iloc[result.groupby(['user_id']).apply(lambda x: x['predict'].idxmax())]
 
     @staticmethod
-    def valid_result_merge(predict, test, label):
+    def valid_result_merge(predict_result, test, label):
         result = test
-        result['predict'] = predict
+        result['predict'] = predict_result
         result['label'] = label
         result = result.reset_index(drop=True)
         result['predict'] = result['predict'].astype('float64')
         return result.iloc[result.groupby(['user_id']).apply(lambda x: x['predict'].idxmax())]
 
     @staticmethod
-    def evaluation(predict, test, label):
-        result = XGBoostModel.valid_result_merge(predict, test, label)
+    def evaluation(predict_result, test, label):
+        result = XGBoostModel.valid_result_merge(predict_result, test, label)
         score = 0.0
         service_list = result.groupby(['current_service']).count().index.values
 

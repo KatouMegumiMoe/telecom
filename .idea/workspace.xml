@@ -2,14 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66448ca2-09b1-4fc1-9367-525d6671f63d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/SortResult.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/xgb.model" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/FeatureEngineering.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/test.csv" beforeDir="false" afterPath="$PROJECT_DIR$/resources/test.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/result.csv" beforeDir="false" afterPath="$PROJECT_DIR$/resources/result.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/submission.csv" beforeDir="false" afterPath="$PROJECT_DIR$/resources/submission.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Constant.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constant.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DataProcess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataProcess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TestDemo.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/TestDemo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TransformToBinary.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/TransformToBinary.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SortResult.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TestDemo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TransformToBinary.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/XGBoostModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/XGBoostModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/xgb.model" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,24 +35,24 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="8" />
+          <entry key="py" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="8" />
+          <entry key="Python" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dummy" value="24" />
-          <entry key="py" value="5673" />
+          <entry key="dummy" value="28" />
+          <entry key="py" value="6323" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="24" />
-          <entry key="Python" value="5673" />
+          <entry key="PLAIN_TEXT" value="28" />
+          <entry key="Python" value="6323" />
         </counts>
       </usages-collector>
     </session>
@@ -57,41 +62,31 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DataProcess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="471">
-              <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
+            <state relative-caret-position="-130">
+              <caret line="45" column="27" lean-forward="true" selection-start-line="45" selection-start-column="27" selection-end-line="45" selection-end-column="27" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1537633391839" expanded="true" signature="87:88" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/XGBoostModel.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="35" column="65" selection-start-line="35" selection-start-column="65" selection-end-line="35" selection-end-column="65" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-                <marker date="1537636220379" expanded="true" signature="70:71" ph="..." />
-                <marker date="1537636220379" expanded="true" signature="178:187" ph="..." />
-                <marker date="1537636220379" expanded="true" signature="178:1192" ph="..." />
-                <marker date="1537636220379" expanded="true" signature="1192:1197" ph="..." />
-                <marker date="1537636220379" expanded="true" signature="2441:2446" ph="..." />
+                <marker date="1537663535520" expanded="true" signature="114:115" ph="..." />
+                <marker date="1537663535520" expanded="true" signature="2799:2808" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TransformToBinary.py">
+        <entry file="file://$PROJECT_DIR$/src/XGBoostModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="45" column="74" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="74" />
+            <state relative-caret-position="-3">
+              <caret line="41" column="26" lean-forward="true" selection-start-line="41" selection-start-column="26" selection-end-line="41" selection-end-column="26" />
               <folding>
-                <marker date="1537634201460" expanded="true" signature="46:47" ph="..." />
-                <marker date="1537634201460" expanded="true" signature="46:52" ph="..." />
+                <element signature="e#0#21#0" expanded="true" />
+                <marker date="1537663786425" expanded="true" signature="106:107" ph="..." />
+                <marker date="1537663786425" expanded="true" signature="214:223" ph="..." />
+                <marker date="1537663786425" expanded="true" signature="214:1236" ph="..." />
+                <marker date="1537663786425" expanded="true" signature="1236:1241" ph="..." />
+                <marker date="1537663786425" expanded="true" signature="1606:2341" ph="..." />
+                <marker date="1537663786425" expanded="true" signature="1953:2125" ph="..." />
+                <marker date="1537663786425" expanded="true" signature="3059:3064" ph="..." />
               </folding>
             </state>
           </provider>
@@ -113,30 +108,31 @@
         <entry file="file://$PROJECT_DIR$/src/Constant.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="154">
-              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+              <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TestDemo.py">
+        <entry file="file://$PROJECT_DIR$/src/FeatureEngineering.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="110">
-              <caret line="5" column="60" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="60" />
+              <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
               <folding>
-                <element signature="e#0#25#0" expanded="true" />
+                <marker date="1537663535529" expanded="true" signature="47:48" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SortResult.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="286">
-              <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+              <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#0#25#0" expanded="true" />
+                <marker date="1537663822953" expanded="true" signature="52:86" ph="..." />
               </folding>
             </state>
           </provider>
@@ -165,12 +161,14 @@
       <list>
         <option value="$PROJECT_DIR$/src/data_process.py" />
         <option value="$PROJECT_DIR$/src/ModelTrain.py" />
-        <option value="$PROJECT_DIR$/src/DataProcess.py" />
         <option value="$PROJECT_DIR$/src/TransformToBinary.py" />
+        <option value="$PROJECT_DIR$/src/SortResult.py" />
         <option value="$PROJECT_DIR$/src/TestDemo.py" />
         <option value="$PROJECT_DIR$/src/Constant.py" />
-        <option value="$PROJECT_DIR$/src/SortResult.py" />
+        <option value="$PROJECT_DIR$/src/DataProcess.py" />
+        <option value="$PROJECT_DIR$/src/FeatureEngineering.py" />
         <option value="$PROJECT_DIR$/src/XGBoostModel.py" />
+        <option value="$PROJECT_DIR$/src/Main.py" />
       </list>
     </option>
   </component>
@@ -234,11 +232,16 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537635629231" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537663786449" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -253,6 +256,27 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.TestDemo">
+    <configuration name="SortResult" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="telecom" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/SortResult.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestDemo" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="telecom" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -265,7 +289,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/TestDemo.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/Main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -298,10 +322,12 @@
     <list>
       <item itemvalue="Python.TestDemo" />
       <item itemvalue="Python.TransformToBinary" />
+      <item itemvalue="Python.SortResult" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.TestDemo" />
+        <item itemvalue="Python.SortResult" />
         <item itemvalue="Python.TransformToBinary" />
       </list>
     </recent_temporary>
@@ -365,6 +391,23 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/SortResult.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" column="24" lean-forward="true" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TransformToBinary.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="47" column="32" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="47" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Const.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -378,63 +421,56 @@
     <entry file="file://$PROJECT_DIR$/src/Constant.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TestDemo.py">
+    <entry file="file://$PROJECT_DIR$/src/FeatureEngineering.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
-          <caret line="5" column="60" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="60" />
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <marker date="1537663535529" expanded="true" signature="47:48" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DataProcess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="471">
-          <caret line="31" column="8" selection-start-line="31" selection-start-column="8" selection-end-line="31" selection-end-column="8" />
+        <state relative-caret-position="-130">
+          <caret line="45" column="27" lean-forward="true" selection-start-line="45" selection-start-column="27" selection-end-line="45" selection-end-column="27" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1537633391839" expanded="true" signature="87:88" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SortResult.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/TransformToBinary.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="45" column="74" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="74" />
-          <folding>
-            <marker date="1537634201460" expanded="true" signature="46:47" ph="..." />
-            <marker date="1537634201460" expanded="true" signature="46:52" ph="..." />
+            <marker date="1537663535520" expanded="true" signature="114:115" ph="..." />
+            <marker date="1537663535520" expanded="true" signature="2799:2808" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/XGBoostModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="35" column="65" selection-start-line="35" selection-start-column="65" selection-end-line="35" selection-end-column="65" />
+        <state relative-caret-position="-3">
+          <caret line="41" column="26" lean-forward="true" selection-start-line="41" selection-start-column="26" selection-end-line="41" selection-end-column="26" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
-            <marker date="1537636220379" expanded="true" signature="70:71" ph="..." />
-            <marker date="1537636220379" expanded="true" signature="178:187" ph="..." />
-            <marker date="1537636220379" expanded="true" signature="178:1192" ph="..." />
-            <marker date="1537636220379" expanded="true" signature="1192:1197" ph="..." />
-            <marker date="1537636220379" expanded="true" signature="2441:2446" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="106:107" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="214:223" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="214:1236" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="1236:1241" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="1606:2341" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="1953:2125" ph="..." />
+            <marker date="1537663786425" expanded="true" signature="3059:3064" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" column="20" selection-start-line="13" selection-start-column="20" selection-end-line="13" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+            <marker date="1537663822953" expanded="true" signature="52:86" ph="..." />
           </folding>
         </state>
       </provider>
