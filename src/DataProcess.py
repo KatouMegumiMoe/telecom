@@ -5,25 +5,25 @@ from Constant import Const
 
 class DataProcess:
 
-    def __init__(self, train_file_name, test_file_name, df=None, dft=None):
-        self.train_file_name = train_file_name
-        self.test_file_name = test_file_name
-        self.df = df
-        self.dft = dft
+    def __init__(self):
+        self.df = None
+        self.dft = None
 
-    def data_input(self):
-        self.df = pd.read_csv(self.train_file_name)
-        self.dft = pd.read_csv(self.test_file_name)
-        return self.fill_nan()
-
-    def fill_nan(self):
-
-        self.df = self.df[~self.df.isin(['\N'])].fillna(0)
-        self.df = self.df.reset_index(drop=True)
-        self.dft = self.dft[~self.dft.isin(['\N'])].fillna(0)
-        self.dft = self.dft.reset_index(drop=True)
+    def data_input(self, train_file_name, test_file_name):
+        self.df = pd.read_csv(train_file_name)
+        self.dft = pd.read_csv(test_file_name)
+        self.df = self.fill_data(self.df)
+        self.dft = self.fill_data(self.dft)
 
         return self.df, self.dft
+
+    @staticmethod
+    def fill_data(data_frame):
+        data_frame = data_frame[~data_frame.isin(['\N'])].fillna(0)
+        data_frame = data_frame.reset_index(drop=True)
+        # data_frame['contract_time'] = data_frame['contract_time'].replace(-1, 0)
+
+        return data_frame
 
     @staticmethod
     def transform_to_binary(df, dft, df_binary=pd.DataFrame(), dft_binary=pd.DataFrame()):
