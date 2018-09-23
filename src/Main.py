@@ -11,11 +11,11 @@ if __name__ == '__main__':
     df, dft = dp.data_input(Const.TRAIN_FILE_NAME, Const.TEST_FILE_NAME)
     tc.print_event()
 
-    df_bin, dft_bin = dp.transform_to_binary(df, dft)
+    fe = FeatureEngineering()
+    df, dft = fe.feature_process(df, dft)
     tc.print_event()
 
-    fe = FeatureEngineering()
-    df_bin, dft_bin = fe.feature_process(df_bin, dft_bin)
+    df_bin, dft_bin = dp.transform_to_binary(df, dft)
     tc.print_event()
 
     X_train, y_train, X_valid, y_valid, X_test = dp.get_split_data(df_bin, dft_bin)

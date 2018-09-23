@@ -6,7 +6,7 @@ import pandas as pd
 
 class XGBoostModel:
 
-    def __init__(self, X_train, y_train, X_valid, y_valid, X_test, num_round=Const.NUM_ROUND, model=None):
+    def __init__(self, X_train, y_train, X_valid, y_valid, X_test, model=None):
         self.params = {'colsample_bytree': 0.8,
                        'silent': 1,
                        'eval_metric': 'error',
@@ -31,12 +31,17 @@ class XGBoostModel:
         self.dvalid = xgb.DMatrix(X_valid.drop(['current_service', 'user_id'], axis=1), y_valid)
         self.dtest = xgb.DMatrix(X_test.drop(['user_id'], axis=1))
 
-        self.num_round = num_round
+        self.num_round = Const.NUM_ROUND
+        self.early_stopping_rounds = Const.EARLY_STOP_ROUND
         self.model = model
 
     def train_model(self):
         watchlist = [(self.dtrain, 'train'), (self.dvalid, 'valid')]
-        self.model = xgb.train(self.params, self.dtrain, evals=watchlist, num_boost_round=self.num_round)
+        self.model = xgb.train(self.params,
+                               self.dtrain,
+                               evals=watchlist,
+                               num_boost_round=self.num_round,
+                               early_stopping_rounds=self.early_stopping_rounds)
         self.model.save_model(Const.MODEL_FILE_NAME)
 
         self.valid_model()

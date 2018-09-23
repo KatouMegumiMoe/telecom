@@ -7,8 +7,8 @@ class TimeCost:
         self.new_time = 0
         self.old_time = time.time()
         self.events = ['reading data',
-                       'transforming data to binary',
                        'feature processing',
+                       'transforming data to binary',
                        'splitting data',
                        'model training']
         self.count = 0
