@@ -8,12 +8,18 @@ class DataProcess:
     def __init__(self):
         self.df = None
         self.dft = None
+        self.services = list()
 
-    def data_input(self, train_file_name, test_file_name):
+    def data_input(self, train_file_name, test_file_name, mode):
         self.df = pd.read_csv(train_file_name)
-        self.dft = pd.read_csv(test_file_name)
         self.df = self.fill_data(self.df)
-        self.dft = self.fill_data(self.dft)
+        self.df = self.label_process(self.df)
+
+        if not mode:
+            self.dft = pd.read_csv(test_file_name)
+            self.dft = self.fill_data(self.dft)
+        else:
+            self.dft = None
 
         return self.df, self.dft
 
@@ -25,69 +31,41 @@ class DataProcess:
 
         return data_frame
 
-    @staticmethod
-    def transform_to_binary(df, dft, df_binary=pd.DataFrame(), dft_binary=pd.DataFrame()):
-        all_service = df.groupby(['current_service']).count().index.values
-        service_list = list()
-        user_list = list()
-        label_list = list()
+    def label_process(self, data_frame):
+        self.services = data_frame.groupby(['current_service']).count().index.values
+        for label_id in range(Const.CATEGORY_NUM):
+            service = self.services[label_id]
+            data_frame['current_service'] = data_frame['current_service'].replace(service, label_id)
 
-        for row in range(df.shape[0]):
-            current_service = int(df.at[row, 'current_service'])
-            user_id = df.at[row, 'user_id']
-
-            for service_id in all_service:
-                service_list.append(service_id)
-                user_list.append(user_id)
-                label_list.append(1) if service_id == current_service else label_list.append(0)
-
-        df_binary['service_id'] = service_list
-        df_binary['user_id'] = user_list
-        df_binary['label'] = label_list
-
-        df_train = pd.merge(df, df_binary, how='left', on='user_id')
-
-        service_list = list()
-        user_list = list()
-
-        for row in range(dft.shape[0]):
-            user_id = str(dft.at[row, 'user_id'])
-
-            for service_id in all_service:
-                service_list.append(service_id)
-                user_list.append(user_id)
-
-        dft_binary['service_id'] = service_list
-        dft_binary['user_id'] = user_list
-
-        df_test = pd.merge(dft, dft_binary, how='left', on='user_id')
-
-        return df_train, df_test
+        return data_frame
 
     @staticmethod
-    def get_split_data(df_bin, dft_bin):
+    def get_split_data(df_bin, dft_bin, mode):
         user_id = [user[0] for user in df_bin[['user_id']].values]
-        group = GroupKFold(n_splits=5)
+        group = GroupKFold(n_splits=10)
 
-        for train_idx, valid_idx in group.split(df_bin.drop(['label'], axis=1), df_bin[['label']], groups=user_id):
+        for train_idx, valid_idx in group.split(df_bin.drop(['current_service'], axis=1),
+                                                df_bin[['current_service']],
+                                                groups=user_id):
             train = df_bin.iloc[train_idx]
             valid = df_bin.iloc[valid_idx]
-            X_train = train.drop(['label'], axis=1)
-            y_train = train[['label']]
-            X_valid = valid.drop(['label'], axis=1)
-            y_valid = valid[['label']]
+            X_train = train.drop(['current_service'], axis=1)
+            y_train = train[['current_service']]
+            X_valid = valid.drop(['current_service'], axis=1)
+            y_valid = valid[['current_service']]
             break
+
+        if not mode:
+            X_train = df_bin.drop(['current_service'], axis=1)
+            y_train = df_bin[['current_service']]
 
         X_test = dft_bin
 
         return X_train, y_train, X_valid, y_valid, X_test
 
-    @staticmethod
-    def sort_index(dft, df):
-        index = [item for item in range(dft.shape[0])]
-        dft['sort'] = index
-        result = pd.merge(df, dft, how='left', on='user_id')
-        result = result[['user_id', 'predict', 'sort']]
-        result = result.sort_values(['sort'])
+    def transform_index(self, result):
+        for label_id in range(Const.CATEGORY_NUM):
+            service = self.services[label_id]
+            result['predict'] = result['predict'].replace(label_id, int(service))
         result = result[['user_id', 'predict']]
         result.to_csv(Const.SUBMISSION_FILE_NAME, index=False)

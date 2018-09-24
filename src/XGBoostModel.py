@@ -6,20 +6,21 @@ import pandas as pd
 
 class XGBoostModel:
 
-    def __init__(self, X_train, y_train, X_valid, y_valid, X_test, model=None):
+    def __init__(self, X_train, y_train, X_valid, y_valid, X_test, mode, model=None):
         self.params = {'colsample_bytree': 0.8,
                        'silent': 1,
-                       'eval_metric': 'error',
+                       'eval_metric': 'mlogloss',
                        'eta': 0.05,
                        'learning_rate': 0.1,
                        'njob': 8,
                        'min_child_weight': 1,
                        'subsample': 0.8,
                        'seed': 0,
-                       'objective': 'binary:logistic',
+                       'objective': 'multi:softmax',
                        'max_depth': 5,
                        'gamma': 0.0,
-                       'booster': 'gbtree'}
+                       'booster': 'gbtree',
+                       'num_class': Const.CATEGORY_NUM}
 
         self.X_train = X_train
         self.y_train = y_train
@@ -27,25 +28,33 @@ class XGBoostModel:
         self.y_valid = y_valid
         self.X_test = X_test
 
-        self.dtrain = xgb.DMatrix(X_train.drop(['current_service', 'user_id'], axis=1), y_train)
-        self.dvalid = xgb.DMatrix(X_valid.drop(['current_service', 'user_id'], axis=1), y_valid)
-        self.dtest = xgb.DMatrix(X_test.drop(['user_id'], axis=1))
+        self.dtrain = xgb.DMatrix(X_train.drop(['user_id'], axis=1), y_train)
+        self.dvalid = xgb.DMatrix(X_valid.drop(['user_id'], axis=1), y_valid)
+        self.dtest = None
 
         self.num_round = Const.NUM_ROUND
         self.early_stopping_rounds = Const.EARLY_STOP_ROUND
         self.model = model
+        self.mode = mode
 
-    def train_model(self):
+    def train_model(self, result=None):
         watchlist = [(self.dtrain, 'train'), (self.dvalid, 'valid')]
         self.model = xgb.train(self.params,
                                self.dtrain,
                                evals=watchlist,
                                num_boost_round=self.num_round,
                                early_stopping_rounds=self.early_stopping_rounds)
-        self.model.save_model(Const.MODEL_FILE_NAME)
+        # self.model.save_model(Const.MODEL_FILE_NAME)
 
-        self.valid_model()
-        result = self.predict_model()
+        if self.mode:
+            self.valid_model()
+        else:
+            result = self.predict_model()
+
+        importance = self.model.get_fscore()
+        importance = sorted(importance.items(), key=operator.itemgetter(1))
+        print pd.DataFrame(importance, columns=['feature', 'score'])
+
         return result
 
     def load_model(self):
@@ -53,19 +62,17 @@ class XGBoostModel:
         self.model.load_model(Const.MODEL_FILE_NAME)
         self.valid_model()
 
-        importance = self.model.get_fscore()
-        importance = sorted(importance.items(), key=operator.itemgetter(1))
-        print pd.DataFrame(importance, columns=['feature', 'score'])
-
     def valid_model(self):
         prediction = self.model.predict(self.dvalid)
         err = XGBoostModel.evaluation(prediction, self.X_valid, self.y_valid)
         print 'the total f-score:', err
 
     def predict_model(self):
+        self.dtest = xgb.DMatrix(self.X_test.drop(['user_id'], axis=1))
         prediction = self.model.predict(self.dtest)
         result = XGBoostModel.test_result_merge(prediction, self.X_test)
-        XGBoostModel.save_data(result)
+        print 'finished model training'
+        # XGBoostModel.save_data(result)
         return result
 
     @staticmethod
@@ -74,7 +81,7 @@ class XGBoostModel:
         result['predict'] = predict_result
         result = result.reset_index(drop=True)
         result['predict'] = result['predict'].astype('float64')
-        return result.iloc[result.groupby(['user_id']).apply(lambda x: x['predict'].idxmax())]
+        return result
 
     @staticmethod
     def valid_result_merge(predict_result, test, label):
@@ -83,18 +90,18 @@ class XGBoostModel:
         result['label'] = label
         result = result.reset_index(drop=True)
         result['predict'] = result['predict'].astype('float64')
-        return result.iloc[result.groupby(['user_id']).apply(lambda x: x['predict'].idxmax())]
+        return result
 
     @staticmethod
     def evaluation(predict_result, test, label):
         result = XGBoostModel.valid_result_merge(predict_result, test, label)
         score = 0.0
-        service_list = result.groupby(['current_service']).count().index.values
+        service_list = result.groupby(['label']).count().index.values
 
         for service in service_list:
-            tp = result[(result['service_id'] == result['current_service']) & (result['current_service'] == service)].shape[0]
-            fp = result[(result['service_id'] != result['current_service']) & (result['service_id'] == service)].shape[0]
-            fn = result[(result['service_id'] != result['current_service']) & (result['current_service'] == service)].shape[0]
+            tp = result[(result['label'] == result['predict']) & (result['label'] == service)].shape[0]
+            fp = result[(result['label'] != result['predict']) & (result['predict'] == service)].shape[0]
+            fn = result[(result['label'] != result['predict']) & (result['label'] == service)].shape[0]
 
             try:
                 precision = float(tp)/(tp+fp)
@@ -108,7 +115,7 @@ class XGBoostModel:
 
     @staticmethod
     def save_data(result):
-        submission = result[['user_id', 'service_id']]
+        submission = result[['user_id', 'predict']]
         submission.columns = ['user_id', 'predict']
         submission.to_csv(Const.SUBMISSION_FILE_NAME, index=False)
         result.to_csv(Const.RESULT_FILE_NAME)
