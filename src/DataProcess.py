@@ -5,19 +5,20 @@ from Constant import Const
 
 class DataProcess:
 
-    def __init__(self):
+    def __init__(self, mode):
         self.df = None
         self.dft = None
         self.services = list()
+        self.mode = mode
 
-    def data_input(self, train_file_name, test_file_name, mode):
+    def data_input(self, train_file_name, test_file_name):
         self.df = pd.read_csv(train_file_name)
-        self.df = self.fill_data(self.df)
+        self.df = DataProcess.fill_data(self.df)
         self.df = self.label_process(self.df)
 
-        if not mode:
+        if not self.mode:
             self.dft = pd.read_csv(test_file_name)
-            self.dft = self.fill_data(self.dft)
+            self.dft = DataProcess.fill_data(self.dft)
         else:
             self.dft = None
 
@@ -39,8 +40,7 @@ class DataProcess:
 
         return data_frame
 
-    @staticmethod
-    def get_split_data(df_bin, dft_bin, mode):
+    def get_split_data(self, df_bin, dft_bin):
         user_id = [user[0] for user in df_bin[['user_id']].values]
         group = GroupKFold(n_splits=10)
 
@@ -55,7 +55,7 @@ class DataProcess:
             y_valid = valid[['current_service']]
             break
 
-        if not mode:
+        if not self.mode:
             X_train = df_bin.drop(['current_service'], axis=1)
             y_train = df_bin[['current_service']]
 

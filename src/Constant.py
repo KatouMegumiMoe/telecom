@@ -11,5 +11,5 @@ Const.SUBMISSION_FILE_NAME = '../resources/submission.csv'
 Const.MODEL_FILE_NAME = '../resources/xgb.model'
 
 Const.CATEGORY_NUM = 15
-Const.NUM_ROUND = 10
+Const.NUM_ROUND = 2
 Const.EARLY_STOP_ROUND = 500

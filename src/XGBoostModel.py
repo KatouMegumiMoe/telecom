@@ -6,7 +6,7 @@ import pandas as pd
 
 class XGBoostModel:
 
-    def __init__(self, X_train, y_train, X_valid, y_valid, X_test, mode, model=None):
+    def __init__(self, mode):
         self.params = {'colsample_bytree': 0.8,
                        'silent': 1,
                        'eval_metric': 'mlogloss',
@@ -22,34 +22,33 @@ class XGBoostModel:
                        'booster': 'gbtree',
                        'num_class': Const.CATEGORY_NUM}
 
-        self.X_train = X_train
-        self.y_train = y_train
-        self.X_valid = X_valid
-        self.y_valid = y_valid
-        self.X_test = X_test
-
-        self.dtrain = xgb.DMatrix(X_train.drop(['user_id'], axis=1), y_train)
-        self.dvalid = xgb.DMatrix(X_valid.drop(['user_id'], axis=1), y_valid)
+        self.dtrain = None
+        self.dvalid = None
         self.dtest = None
 
-        self.num_round = Const.NUM_ROUND
-        self.early_stopping_rounds = Const.EARLY_STOP_ROUND
-        self.model = model
+        self.model = None
         self.mode = mode
 
-    def train_model(self, result=None):
-        watchlist = [(self.dtrain, 'train'), (self.dvalid, 'valid')]
+    def train_model(self, X_train, y_train, X_valid, y_valid, X_test, result=None):
+
+        self.dtrain = xgb.DMatrix(X_train.drop(['user_id'], axis=1), y_train)
+        if self.mode:
+            self.dvalid = xgb.DMatrix(X_valid.drop(['user_id'], axis=1), y_valid)
+            watchlist = [(self.dtrain, 'train'), (self.dvalid, 'valid')]
+        else:
+            self.dtest = xgb.DMatrix(X_test.drop(['user_id'], axis=1))
+            watchlist = [(self.dtrain, 'train')]
+
         self.model = xgb.train(self.params,
                                self.dtrain,
                                evals=watchlist,
-                               num_boost_round=self.num_round,
-                               early_stopping_rounds=self.early_stopping_rounds)
+                               num_boost_round=Const.NUM_ROUND)
         # self.model.save_model(Const.MODEL_FILE_NAME)
 
         if self.mode:
-            self.valid_model()
+            self.valid_model(X_valid, y_valid)
         else:
-            result = self.predict_model()
+            result = self.predict_model(X_test)
 
         importance = self.model.get_fscore()
         importance = sorted(importance.items(), key=operator.itemgetter(1))
@@ -62,17 +61,16 @@ class XGBoostModel:
         self.model.load_model(Const.MODEL_FILE_NAME)
         self.valid_model()
 
-    def valid_model(self):
+    def valid_model(self, X_valid, y_valid):
         prediction = self.model.predict(self.dvalid)
-        err = XGBoostModel.evaluation(prediction, self.X_valid, self.y_valid)
+        err = XGBoostModel.evaluation(prediction, X_valid, y_valid)
         print 'the total f-score:', err
 
-    def predict_model(self):
-        self.dtest = xgb.DMatrix(self.X_test.drop(['user_id'], axis=1))
+    def predict_model(self, X_test):
         prediction = self.model.predict(self.dtest)
-        result = XGBoostModel.test_result_merge(prediction, self.X_test)
+        result = XGBoostModel.test_result_merge(prediction, X_test)
         print 'finished model training'
-        # XGBoostModel.save_data(result)
+        XGBoostModel.save_data(result)
         return result
 
     @staticmethod
