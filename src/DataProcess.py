@@ -13,24 +13,15 @@ class DataProcess:
 
     def data_input(self, train_file_name, test_file_name):
         self.df = pd.read_csv(train_file_name)
-        self.df = DataProcess.fill_data(self.df)
         self.df = self.label_process(self.df)
-
+        print self.df.shape
         if not self.mode:
             self.dft = pd.read_csv(test_file_name)
-            self.dft = DataProcess.fill_data(self.dft)
+            print self.dft.shape
         else:
             self.dft = None
 
         return self.df, self.dft
-
-    @staticmethod
-    def fill_data(data_frame):
-        data_frame = data_frame[~data_frame.isin(['\N'])].fillna(0)
-        data_frame = data_frame.reset_index(drop=True)
-        # data_frame['contract_time'] = data_frame['contract_time'].replace(-1, 0)
-
-        return data_frame
 
     def label_process(self, data_frame):
         self.services = data_frame.groupby(['current_service']).count().index.values

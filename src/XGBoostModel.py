@@ -31,19 +31,19 @@ class XGBoostModel:
 
     def train_model(self, X_train, y_train, X_valid, y_valid, X_test, result=None):
 
-        self.dtrain = xgb.DMatrix(X_train.drop(['user_id'], axis=1), y_train)
+        self.dtrain = xgb.DMatrix(X_train.drop(['user_id'], axis=1), y_train, missing=Const.MISSING_NUM)
         if self.mode:
-            self.dvalid = xgb.DMatrix(X_valid.drop(['user_id'], axis=1), y_valid)
+            self.dvalid = xgb.DMatrix(X_valid.drop(['user_id'], axis=1), y_valid, missing=Const.MISSING_NUM)
             watchlist = [(self.dtrain, 'train'), (self.dvalid, 'valid')]
         else:
-            self.dtest = xgb.DMatrix(X_test.drop(['user_id'], axis=1))
+            self.dtest = xgb.DMatrix(X_test.drop(['user_id'], axis=1), missing=Const.MISSING_NUM)
             watchlist = [(self.dtrain, 'train')]
 
         self.model = xgb.train(self.params,
                                self.dtrain,
                                evals=watchlist,
                                num_boost_round=Const.NUM_ROUND)
-        # self.model.save_model(Const.MODEL_FILE_NAME)
+        self.model.save_model(Const.MODEL_FILE_NAME)
 
         if self.mode:
             self.valid_model(X_valid, y_valid)
