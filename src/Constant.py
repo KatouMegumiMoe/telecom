@@ -15,4 +15,4 @@ Const.MODEL_FILE_NAME = '../resources/xgb.model'
 Const.CATEGORY_NUM = 11
 Const.NUM_ROUND = 2
 Const.EARLY_STOP_ROUND = 500
-Const.MISSING_NUM = -999
+Const.MISSING_NUM = -99999.99

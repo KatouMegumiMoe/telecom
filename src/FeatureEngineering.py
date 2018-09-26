@@ -22,64 +22,75 @@ class FeatureEngineering:
 
     @staticmethod
     def change_by_row(df):
-        min_fee = list()
-        max_fee = list()
-        approx_fee_min = list()
-        approx_fee_max = list()
-        max_traffic = list()
-        sum_traffic = list()
-        max_call_time = list()
-        max_local_and_call = list()
+        fee_min = list()
+        fee_max = list()
+        fee_interval_min = list()
+        fee_interval_max = list()
+        traffic_max = list()
+        traffic_min = list()
+        traffic_sum = list()
+        traffic_service = list()
+        call_max = list()
+        call_min = list()
+        call_local_and_service = list()
 
         for row in range(df.shape[0]):
-            min_fee_item = min(df.at[row, '1_total_fee'],
-                               df.at[row, '2_total_fee'],
-                               df.at[row, '3_total_fee'],
-                               df.at[row, '4_total_fee'])
-            max_fee_item = max(df.at[row, '1_total_fee'],
-                               df.at[row, '2_total_fee'],
-                               df.at[row, '3_total_fee'],
-                               df.at[row, '4_total_fee'])
-            min_fee.append(min_fee_item)
-            max_fee.append(max_fee_item)
-            sum_traffic.append(df.at[row, 'local_trafffic_month'] + df.at[row, 'last_month_traffic'])
+            fee_min_item = min(df.at[row, 'fee_1_month'],
+                               df.at[row, 'fee_2_month'],
+                               df.at[row, 'fee_3_month'],
+                               df.at[row, 'fee_4_month'])
+            fee_max_item = max(df.at[row, 'fee_1_month'],
+                               df.at[row, 'fee_2_month'],
+                               df.at[row, 'fee_3_month'],
+                               df.at[row, 'fee_4_month'])
+            fee_min.append(fee_min_item)
+            fee_max.append(fee_max_item)
 
-            if df.at[row, 'local_trafffic_month'] > df.at[row, 'last_month_traffic']:
-                max_traffic.append(df.at[row, 'local_trafffic_month'])
+            traffic_sum.append(df.at[row, 'traffic_0_month'] + df.at[row, 'traffic_1_month'])
+            traffic_service.append(df.at[row, 'traffic_0_month'] - df.at[row, 'traffic_local_0_month'])
+
+            if df.at[row, 'traffic_1_month'] > df.at[row, 'traffic_0_month']:
+                traffic_max.append(df.at[row, 'traffic_1_month'])
+                traffic_min.append(df.at[row, 'traffic_0_month'])
             else:
-                max_traffic.append(df.at[row, 'last_month_traffic'])
+                traffic_max.append(df.at[row, 'traffic_0_month'])
+                traffic_min.append(df.at[row, 'traffic_1_month'])
 
-            if df.at[row, 'service1_caller_time'] > df.at[row, 'service2_caller_time']:
-                max_call_time.append(df.at[row, 'service1_caller_time'])
-                max_local_and_call.append(df.at[row, 'service1_caller_time'] + df.at[row, 'local_caller_time'])
+            if df.at[row, 'call_service_1_month'] > df.at[row, 'call_service_2_month']:
+                call_max.append(df.at[row, 'call_service_1_month'])
+                call_min.append(df.at[row, 'call_service_2_month'])
+                call_local_and_service.append(df.at[row, 'call_service_1_month'] + df.at[row, 'call_local'])
             else:
-                max_call_time.append(df.at[row, 'service2_caller_time'])
-                max_local_and_call.append(df.at[row, 'service2_caller_time'] + df.at[row, 'local_caller_time'])
+                call_max.append(df.at[row, 'call_service_2_month'])
+                call_min.append(df.at[row, 'call_service_1_month'])
+                call_local_and_service.append(df.at[row, 'call_service_2_month'] + df.at[row, 'call_local'])
 
-            if df.at[row, 'many_over_bill'] == 1:
-                approx_fee_min.append(0)
-                approx_fee_max.append(min_fee_item)
+            if df.at[row, 'is_over_fee'] == 1:
+                fee_interval_min.append(0.0)
+                fee_interval_max.append(fee_min_item)
             else:
-                approx_fee_min.append(max_fee_item)
-                approx_fee_max.append(9999)
+                fee_interval_min.append(fee_max_item)
+                fee_interval_max.append(9999.0)
 
-        df['min_fee'] = min_fee
-        df['max_fee'] = max_fee
-        df['approx_fee_min'] = approx_fee_min
-        df['approx_fee_max'] = approx_fee_max
-        df['max_traffic'] = max_traffic
-        df['sum_traffic'] = sum_traffic
-        df['max_call_time'] = max_call_time
-        df['max_local_and_call'] = max_local_and_call
+        df['fee_min'] = fee_min
+        df['fee_max'] = fee_max
+        df['fee_interval_min'] = fee_interval_min
+        df['fee_interval_max'] = fee_interval_max
+        df['traffic_max'] = traffic_max
+        df['traffic_min'] = traffic_min
+        df['traffic_sum'] = traffic_sum
+        df['call_max'] = call_max
+        df['call_min'] = call_min
+        df['call_local_and_service'] = call_local_and_service
 
         return df
 
     @staticmethod
     def remove_feature(df):
 
-        df = df.drop(['former_complaint_num',
+        df = df.drop(['complaint_former_num',
                       'pay_times',
                       'complaint_level',
-                      'former_complaint_fee'], axis=1)
+                      'complaint_former_fee'], axis=1)
 
         return df
