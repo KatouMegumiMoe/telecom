@@ -2,6 +2,7 @@ import xgboost as xgb
 from Constant import Const
 import operator
 import pandas as pd
+import time
 
 
 class XGBoostModel:
@@ -10,14 +11,14 @@ class XGBoostModel:
         self.params = {'colsample_bytree': 0.8,
                        'silent': 1,
                        'eval_metric': 'mlogloss',
-                       'eta': 0.1,
+                       'eta': 0.05,
                        'learning_rate': 0.1,
                        'njob': 8,
                        'min_child_weight': 1,
                        # 'subsample': 0.8,
                        'seed': 0,
                        'objective': 'multi:softmax',
-                       'max_depth': 5,
+                       'max_depth': 6,
                        'gamma': 0.0,
                        'booster': 'gbtree',
                        'num_class': Const.CATEGORY_NUM}
@@ -42,8 +43,10 @@ class XGBoostModel:
         self.model = xgb.train(self.params,
                                self.dtrain,
                                evals=watchlist,
-                               num_boost_round=Const.NUM_ROUND)
-        self.model.save_model(Const.MODEL_FILE_NAME)
+                               num_boost_round=Const.NUM_ROUND,
+                               early_stopping_rounds=Const.EARLY_STOP_ROUND)
+
+        # self.model.save_model(Const.MODEL_FILE_NAME)
 
         if self.mode:
             self.valid_model(X_valid, y_valid)

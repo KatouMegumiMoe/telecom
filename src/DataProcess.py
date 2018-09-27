@@ -14,10 +14,11 @@ class DataProcess:
     def data_input(self, train_file_name, test_file_name):
         self.df = pd.read_csv(train_file_name)
         self.df = self.label_process(self.df)
-        print self.df.shape
+        print 'the shape of train data:', self.df.shape
+
         if not self.mode:
             self.dft = pd.read_csv(test_file_name)
-            print self.dft.shape
+            print 'the shape of test data:', self.dft.shape
         else:
             self.dft = None
 

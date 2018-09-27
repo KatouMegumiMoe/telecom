@@ -7,7 +7,7 @@ from TimeCost import *
 if __name__ == '__main__':
 
     mode = Const.VALID_MODE
-    # mode = Const.PREDICT_MODE
+    mode = Const.PREDICT_MODE
     tc = TimeCost()
 
     dp = DataProcess(mode)
