@@ -11,7 +11,7 @@ class XGBoostModel:
         self.params = {'colsample_bytree': 0.8,
                        'silent': 1,
                        'eval_metric': 'mlogloss',
-                       'eta': 0.05,
+                       'eta': 0.1,
                        'learning_rate': 0.1,
                        'njob': 8,
                        'min_child_weight': 1,

@@ -1,4 +1,3 @@
-import pandas as pd
 
 
 class FeatureEngineering:
@@ -93,8 +92,8 @@ class FeatureEngineering:
         #               'complaint_level',
         #               'complaint_former_fee',
         #               'is_over_fee',
-        #               'net_service',
+        #               'is_promise_low_consume',
         #               'is_mix_service',
-        #               'is_promise_low_consume'], axis=1)
+        #               'net_service'], axis=1)
 
         return df
