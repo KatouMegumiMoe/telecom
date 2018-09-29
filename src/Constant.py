@@ -13,6 +13,6 @@ Const.SUBMISSION_FILE_NAME = '../resources/submission.csv'
 Const.MODEL_FILE_NAME = '../resources/xgb_'
 
 Const.CATEGORY_NUM = 11
-Const.NUM_ROUND = 2500
+Const.NUM_ROUND = 2000
 Const.EARLY_STOP_ROUND = 500
 Const.MISSING_NUM = -99999.99
