@@ -15,7 +15,7 @@ class XGBoostModel:
                        'learning_rate': 0.1,
                        'njob': 8,
                        'min_child_weight': 1,
-                       'subsample': 0.8,
+                       # 'subsample': 0.8,
                        'seed': 0,
                        'objective': 'multi:softmax',
                        'max_depth': 6,

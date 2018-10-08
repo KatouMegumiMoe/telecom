@@ -31,6 +31,7 @@ class FeatureEngineering:
         traffic_service = list()
         call_max = list()
         call_min = list()
+        pay_avg = list()
         call_local_and_service = list()
 
         for row in range(df.shape[0]):
@@ -44,6 +45,7 @@ class FeatureEngineering:
                                df.at[row, 'fee_4_month'])
             fee_min.append(fee_min_item)
             fee_max.append(fee_max_item)
+            pay_avg.append(float(df.at[row, 'pay_num'])/float(df.at[row, 'pay_times']))
 
             traffic_sum.append(df.at[row, 'traffic_0_month'] + df.at[row, 'traffic_1_month'])
             traffic_service.append(df.at[row, 'traffic_0_month'] - df.at[row, 'traffic_local_0_month'])
@@ -81,6 +83,7 @@ class FeatureEngineering:
         df['call_max'] = call_max
         df['call_min'] = call_min
         df['call_local_and_service'] = call_local_and_service
+        df['pay_avg'] = pay_avg
 
         return df
 
