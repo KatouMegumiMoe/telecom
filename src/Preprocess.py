@@ -31,7 +31,7 @@ def process_null(df):
     df[['online_time']] = pd.to_numeric(df.online_time, errors='coerce')
 
     df = df.replace(np.nan, Const.MISSING_NUM)
-    df[['gender']] = df[['gender']].replace(0, Const.MISSING_NUM)
+    # df[['gender']] = df[['gender']].replace(0, Const.MISSING_NUM)
     return df
 
 
