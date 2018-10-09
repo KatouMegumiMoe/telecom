@@ -90,13 +90,13 @@ class FeatureEngineering:
     @staticmethod
     def remove_feature(df):
 
-        # df = df.drop(['is_over_fee',
-        #               'pay_times',
-        #               'complaint_level',
-        #               'complaint_former_fee',
-        #               'complaint_former_num',
-        #               'is_promise_low_consume',
-        #               'is_mix_service',
-        #               'net_service'], axis=1)
+        df = df.drop(['is_over_fee',
+                      'pay_times',
+                      'complaint_level',
+                      'complaint_former_fee',
+                      'complaint_former_num',
+                      'is_promise_low_consume',
+                      'is_mix_service',
+                      'net_service'], axis=1)
 
         return df
